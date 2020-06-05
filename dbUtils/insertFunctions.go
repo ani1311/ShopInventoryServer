@@ -1,21 +1,26 @@
 package dbUtils
 
-func insertShop(db *sql.DB, shop Shop) {
+import (
+	"database/sql"
+	"fmt"
+	"../models"
+	"../utils"
+)
+
+func InsertShop(db *sql.DB, shop models.Shop) {
 	stmt, err := db.Prepare("INSERT shop SET shopid=?,barcode=?,quantity=?,name=?")
-	checkError(err)
+	utils.CheckError(err)
 	res, err := stmt.Exec(shop.ShopId, shop.Barcode, shop.Quantity, shop.Name)
-	checkError(err)
+	utils.CheckError(err)
 	affect, err := res.RowsAffected()
-	checkError(err)
-	fmt.Println(affect)
+	utils.CheckError(err)
 }
 
-func insertItem(db *sql.DB, item Item) {
+func InsertItem(db *sql.DB, item models.Item) {
 	stmt, err := db.Prepare("INSERT item SET barcode=?,name=?,price=?")
-	checkError(err)
+	utils.CheckError(err)
 	res, err := stmt.Exec(item.Barcode, item.Name, item.Price)
-	checkError(err)
+	utils.CheckError(err)
 	affect, err := res.RowsAffected()
-	checkError(err)
-	fmt.Println(affect)
+	utils.CheckError(err)
 }

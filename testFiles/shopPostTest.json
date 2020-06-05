@@ -1,0 +1,22 @@
+{
+    "data" : [
+        {
+            "shopid" : 4114,
+            "barcode" : "fafa",
+            "quantity" : 1242,
+            "name" : "shop1",
+        },
+        {
+            "shopid" : 444,
+            "barcode" : "13123",
+            "quantity" : 1242,
+            "name" : "shop2",
+        }
+        {
+            "shopid" : 666,
+            "barcode" : "13123",
+            "quantity" : 1242,
+            "name" : "shop3",
+        }
+    ]
+}

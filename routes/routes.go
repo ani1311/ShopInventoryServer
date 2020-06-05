@@ -1,31 +1,39 @@
 package routes
 
-func itemEndpoint(w http.ResponseWriter, r *http.Request) {
+import (
+	"database/sql"
+	"encoding/json"
+	"io/ioutil"
+	"net/http"
+	"../dbUtils"
+	"../utils"
+	"../models"
+)
+
+func ItemEndpoint(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		dataBytes, err := ioutil.ReadAll(r.Body)
-		checkError(err)
-		fmt.Println(string(dataBytes))
-		var data ItemData
+		utils.CheckError(err)
+		var data models.ItemData
 		err = json.Unmarshal(dataBytes, &data)
-		checkError(err)
+		utils.CheckError(err)
 		db, err := sql.Open("mysql", "aniket:aniket1311@(localhost:3306)/shop_inventory")
-		fmt.Println(data)
 		for _, item := range data.Data {
-			insertItem(db, item)
+			dbUtils.InsertItem(db, item)
 		}
 	}
 }
 
-func shopEndpoint(w http.ResponseWriter, r *http.Request) {
+func ShopEndpoint(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		dataBytes, err := ioutil.ReadAll(r.Body)
-		checkError(err)
-		var data ShopData
-		err = json.Unmarshal(dataBytes, data)
-		checkError(err)
+		utils.CheckError(err)
+		var data models.ShopData
+		err = json.Unmarshal(dataBytes, &data)
+		utils.CheckError(err)
 		db, err := sql.Open("mysql", "aniket:aniket1311@(localhost:3306)/shop_inventory")
 		for _, shop := range data.Data {
-			insertShop(db, shop)
+			dbUtils.InsertShop(db, shop)
 		}
 	}
 }
