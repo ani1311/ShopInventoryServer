@@ -1,0 +1,20 @@
+{
+    "data" : [
+        {
+            "barcode" : "13123",
+            "name" : "dadad",
+            "Price" : 123123
+        },
+        {
+            "barcode" : "1312633",
+            "name" : "dadad1",
+            "Price" : 723123
+        },
+        {
+            "barcode" : "1315423",
+            "name" : "dadad2",
+            "Price" : 523123
+        }
+
+    ]
+}
