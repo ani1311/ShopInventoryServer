@@ -14,6 +14,7 @@ func InsertShop(db *sql.DB, shop models.Shop) {
 	utils.CheckError(err)
 	affect, err := res.RowsAffected()
 	utils.CheckError(err)
+	fmt.Println(affect)
 }
 
 func InsertItem(db *sql.DB, item models.Item) {
@@ -23,4 +24,5 @@ func InsertItem(db *sql.DB, item models.Item) {
 	utils.CheckError(err)
 	affect, err := res.RowsAffected()
 	utils.CheckError(err)
+	fmt.Println(affect)
 }

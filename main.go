@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	_ "github.com/go-sql-driver/mysql"
 	"./routes"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
@@ -13,4 +13,3 @@ func main() {
 	http.HandleFunc("/shop", routes.ShopEndpoint)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
-

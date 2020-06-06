@@ -5,24 +5,12 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
-	"../dbUtils"
-	"../utils"
-	"../models"
-)
+	"strconv"
 
-func ItemEndpoint(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
-		dataBytes, err := ioutil.ReadAll(r.Body)
-		utils.CheckError(err)
-		var data models.ItemData
-		err = json.Unmarshal(dataBytes, &data)
-		utils.CheckError(err)
-		db, err := sql.Open("mysql", "aniket:aniket1311@(localhost:3306)/shop_inventory")
-		for _, item := range data.Data {
-			dbUtils.InsertItem(db, item)
-		}
-	}
-}
+	"../dbUtils"
+	"../models"
+	"../utils"
+)
 
 func ShopEndpoint(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
@@ -35,5 +23,19 @@ func ShopEndpoint(w http.ResponseWriter, r *http.Request) {
 		for _, shop := range data.Data {
 			dbUtils.InsertShop(db, shop)
 		}
+	} else if r.Method == http.MethodGet {
+		db, err := sql.Open("mysql", "aniket:aniket1311@(localhost:3306)/shop_inventory")
+		shopId, ok := r.URL.Query()["shopId"]
+		var data models.ShopData
+		if !ok || len(shopId[0]) < 1 {
+			data = dbUtils.SelectAllShop(db)
+		} else {
+			shopIdInt, err := strconv.ParseInt(shopId[0], 10, 32)
+			utils.CheckError(err)
+			data = dbUtils.SelectShopWithId(db, int(shopIdInt))
+		}
+		dataBytes, err := json.Marshal(data)
+		utils.CheckError(err)
+		w.Write(dataBytes)
 	}
 }
