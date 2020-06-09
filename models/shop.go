@@ -1,10 +1,10 @@
 package models
 
 type Shop struct {
-	ShopId   int    `json:"shopId"`
-	Barcode  string `json:"barcode"`
-	Name     string `json:"name"`
-	Quantity int    `json:"quantity"`
+	ShopId    int    `json:"shopId"`
+	Name      string `json:"name"`
+	Longitude string `json:"longitude"`
+	Latitude  string `json:"latitude"`
 }
 
 type ShopData struct {

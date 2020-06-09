@@ -23,6 +23,8 @@ func ShopEndpoint(w http.ResponseWriter, r *http.Request) {
 		for _, shop := range data.Data {
 			dbUtils.InsertShop(db, shop)
 		}
+		w.Write([]byte("Success"))
+		w.WriteHeader(200)
 	} else if r.Method == http.MethodGet {
 		db, err := sql.Open("mysql", "aniket:aniket1311@(localhost:3306)/shop_inventory")
 		shopId, ok := r.URL.Query()["shopId"]

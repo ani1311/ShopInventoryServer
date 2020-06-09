@@ -16,7 +16,7 @@ func SelectShopWithId(db *sql.DB, shopId int) models.ShopData {
 	shopData.Data = make([]models.Shop, 0)
 	for res.Next() {
 		var shop models.Shop
-		res.Scan(&shop.ShopId, &shop.Barcode, &shop.Quantity, &shop.Name)
+		res.Scan(&shop.ShopId, &shop.Name, &shop.Longitude, &shop.Latitude)
 		shopData.Data = append(shopData.Data, shop)
 	}
 	return shopData
@@ -31,7 +31,7 @@ func SelectAllShop(db *sql.DB) models.ShopData {
 	shopData.Data = make([]models.Shop, 0)
 	for res.Next() {
 		var shop models.Shop
-		res.Scan(&shop.ShopId, &shop.Barcode, &shop.Quantity, &shop.Name)
+		res.Scan(&shop.ShopId, &shop.Name, &shop.Longitude, &shop.Latitude)
 		shopData.Data = append(shopData.Data, shop)
 	}
 	return shopData

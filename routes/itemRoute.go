@@ -3,6 +3,7 @@ package routes
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -13,6 +14,7 @@ import (
 
 func ItemEndpoint(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
+		fmt.Println("got stuff")
 		dataBytes, err := ioutil.ReadAll(r.Body)
 		utils.CheckError(err)
 		var data models.ItemData
