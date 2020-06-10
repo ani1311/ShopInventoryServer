@@ -1,13 +1,12 @@
 package dbUtils
 
 import (
-	"database/sql"
-
 	"../models"
 	"../utils"
 )
 
-func SelectShopWithId(db *sql.DB, shopId int) models.ShopData {
+func SelectShopWithId(shopId int) models.ShopData {
+	db := getDB()
 	stmt, err := db.Prepare("SELECT * FROM shop WHERE shopid=?")
 	utils.CheckError(err)
 	res, err := stmt.Query(shopId)
@@ -22,7 +21,8 @@ func SelectShopWithId(db *sql.DB, shopId int) models.ShopData {
 	return shopData
 }
 
-func SelectAllShop(db *sql.DB) models.ShopData {
+func SelectAllShop() models.ShopData {
+	db := getDB()
 	stmt, err := db.Prepare("SELECT * FROM shop ")
 	utils.CheckError(err)
 	res, err := stmt.Query()
@@ -37,7 +37,8 @@ func SelectAllShop(db *sql.DB) models.ShopData {
 	return shopData
 }
 
-func SelectItemWithBarcode(db *sql.DB, barcode string) models.ItemData {
+func SelectItemWithBarcode(barcode string) models.ItemData {
+	db := getDB()
 	stmt, err := db.Prepare("SELECT * FROM item WHERE barcode=?")
 	utils.CheckError(err)
 	res, err := stmt.Query(barcode)
@@ -52,7 +53,8 @@ func SelectItemWithBarcode(db *sql.DB, barcode string) models.ItemData {
 	return itemData
 }
 
-func SelectAllItem(db *sql.DB) models.ItemData {
+func SelectAllItem() models.ItemData {
+	db := getDB()
 	stmt, err := db.Prepare("SELECT * FROM item")
 	utils.CheckError(err)
 	res, err := stmt.Query()
@@ -65,4 +67,22 @@ func SelectAllItem(db *sql.DB) models.ItemData {
 		itemData.Data = append(itemData.Data, item)
 	}
 	return itemData
+}
+
+func SelectShopClient(username string) *models.ShopClient {
+	db := getDB()
+	defer db.Close()
+	stmt, err := db.Prepare("SELECT * FROM item WHERE username=?")
+	utils.CheckError(err)
+	res, err := stmt.Query()
+	utils.CheckError(err)
+	if res.Next() {
+		var shopClient models.ShopClient
+		res.Scan(&shopClient.Username, &shopClient.ShopId, &shopClient.Password)
+		if res.Next() {
+			return nil
+		}
+		return &shopClient
+	}
+	return nil
 }

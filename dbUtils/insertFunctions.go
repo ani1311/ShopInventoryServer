@@ -1,14 +1,15 @@
 package dbUtils
 
 import (
-	"database/sql"
 	"fmt"
 
 	"../models"
 	"../utils"
 )
 
-func InsertShop(db *sql.DB, shop models.Shop) {
+func InsertShop(shop models.Shop) {
+	db := getDB()
+	defer db.Close()
 	stmt, err := db.Prepare("INSERT shop SET shopid=?,name=?,longitude=?,latitude=?")
 	utils.CheckError(err)
 	res, err := stmt.Exec(shop.ShopId, shop.Name, shop.Longitude, shop.Latitude)
@@ -18,7 +19,19 @@ func InsertShop(db *sql.DB, shop models.Shop) {
 	fmt.Println(affect)
 }
 
-func InsertItem(db *sql.DB, item models.Item) {
+func InsertShopClient(shopClient models.ShopClient) {
+	db := getDB()
+	stmt, err := db.Prepare("INSERT shop_client SET username=?,shopid=?,password=?")
+	utils.CheckError(err)
+	res, err := stmt.Exec(shopClient.Username, shopClient.ShopId, shopClient.Password)
+	utils.CheckError(err)
+	affect, err := res.RowsAffected()
+	utils.CheckError(err)
+	fmt.Println(affect)
+}
+
+func InsertItem(item models.Item) {
+	db := getDB()
 	stmt, err := db.Prepare("INSERT item SET barcode=?,name=?,price=?")
 	utils.CheckError(err)
 	res, err := stmt.Exec(item.Barcode, item.Name, item.Price)
@@ -28,7 +41,8 @@ func InsertItem(db *sql.DB, item models.Item) {
 	fmt.Println(affect)
 }
 
-func InsertShopItem(db *sql.DB, shopItem models.ShopItem) {
+func InsertShopItem(shopItem models.ShopItem) {
+	db := getDB()
 	stmt, err := db.Prepare("INSERT shop_item SET shopid=?,barcode=?,quantity=?")
 	utils.CheckError(err)
 	res, err := stmt.Exec(shopItem.ShopId, shopItem.Barcode, shopItem.Quantity)

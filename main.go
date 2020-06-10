@@ -10,7 +10,11 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/item", routes.ItemEndpoint)
-	http.HandleFunc("/shop", routes.ShopEndpoint)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	port := "8000"
+	// Handle routes
+	http.Handle("/", routes.Handlers())
+
+	// serve
+	log.Printf("Server up on port '%s'", port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }

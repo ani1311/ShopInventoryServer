@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"database/sql"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -20,18 +19,16 @@ func ItemEndpoint(w http.ResponseWriter, r *http.Request) {
 		var data models.ItemData
 		err = json.Unmarshal(dataBytes, &data)
 		utils.CheckError(err)
-		db, err := sql.Open("mysql", "aniket:aniket1311@(localhost:3306)/shop_inventory")
 		for _, item := range data.Data {
-			dbUtils.InsertItem(db, item)
+			dbUtils.InsertItem(item)
 		}
 	} else if r.Method == http.MethodGet {
-		db, err := sql.Open("mysql", "aniket:aniket1311@(localhost:3306)/shop_inventory")
 		barcode, ok := r.URL.Query()["barcode"]
 		var data models.ItemData
 		if !ok || len(barcode[0]) < 1 {
-			data = dbUtils.SelectAllItem(db)
+			data = dbUtils.SelectAllItem()
 		} else {
-			data = dbUtils.SelectItemWithBarcode(db, barcode[0])
+			data = dbUtils.SelectItemWithBarcode(barcode[0])
 		}
 		dataBytes, err := json.Marshal(data)
 		utils.CheckError(err)
