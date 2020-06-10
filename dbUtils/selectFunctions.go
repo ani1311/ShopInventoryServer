@@ -72,9 +72,9 @@ func SelectAllItem() models.ItemData {
 func SelectShopClient(username string) *models.ShopClient {
 	db := getDB()
 	defer db.Close()
-	stmt, err := db.Prepare("SELECT * FROM item WHERE username=?")
+	stmt, err := db.Prepare("SELECT * FROM shop_client WHERE username=?")
 	utils.CheckError(err)
-	res, err := stmt.Query()
+	res, err := stmt.Query(username)
 	utils.CheckError(err)
 	if res.Next() {
 		var shopClient models.ShopClient

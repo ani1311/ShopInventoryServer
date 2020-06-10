@@ -22,7 +22,6 @@ func CreateShopClient(w http.ResponseWriter, r *http.Request) {
 	bytes, _ := ioutil.ReadAll(r.Body)
 	err := json.Unmarshal(bytes, &shopClient)
 	utils.CheckError(err)
-	fmt.Println(shopClient)
 	if shopClient.Username == "" || shopClient.Password == "" {
 		var resp = map[string]interface{}{"status": false, "message": "No password "}
 		json.NewEncoder(w).Encode(resp)
@@ -41,11 +40,13 @@ func CreateShopClient(w http.ResponseWriter, r *http.Request) {
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {
-	request := &models.ShopClient{}
-	utils.CheckError(json.NewDecoder(r.Body).Decode(request))
+	request := models.ShopClient{}
+	bytes, _ := ioutil.ReadAll(r.Body)
+	err := json.Unmarshal(bytes, &request)
+	utils.CheckError(err)
 	shopClient := *dbUtils.SelectShopClient(request.Username)
 
-	expiresAt := time.Now().Add(time.Minute * 100000).Unix()
+	expiresAt := time.Now().Add(time.Minute * 10000).Unix()
 
 	errf := bcrypt.CompareHashAndPassword([]byte(request.Password), []byte(shopClient.Password))
 
