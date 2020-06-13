@@ -5,20 +5,22 @@ import (
 	"../utils"
 )
 
-func SelectShopWithId(shopId int) models.ShopData {
+func SelectShopWithName(shopName string) *models.Shop {
 	db := getDB()
-	stmt, err := db.Prepare("SELECT * FROM shop WHERE shopid=?")
+	stmt, err := db.Prepare("SELECT * FROM shop WHERE name=?")
 	utils.CheckError(err)
-	res, err := stmt.Query(shopId)
+	res, err := stmt.Query(shopName)
 	utils.CheckError(err)
-	var shopData models.ShopData
-	shopData.Data = make([]models.Shop, 0)
-	for res.Next() {
+
+	if res.Next() {
 		var shop models.Shop
-		res.Scan(&shop.ShopId, &shop.Name, &shop.Longitude, &shop.Latitude)
-		shopData.Data = append(shopData.Data, shop)
+		res.Scan(&shop.Name, &shop.Longitude, &shop.Latitude, &shop.Password)
+		if res.Next() {
+			return nil
+		}
+		return &shop
 	}
-	return shopData
+	return nil
 }
 
 func SelectAllShop() models.ShopData {
@@ -31,7 +33,7 @@ func SelectAllShop() models.ShopData {
 	shopData.Data = make([]models.Shop, 0)
 	for res.Next() {
 		var shop models.Shop
-		res.Scan(&shop.ShopId, &shop.Name, &shop.Longitude, &shop.Latitude)
+		res.Scan(&shop.Name, &shop.Longitude, &shop.Latitude, &shop.Password)
 		shopData.Data = append(shopData.Data, shop)
 	}
 	return shopData
@@ -69,20 +71,18 @@ func SelectAllItem() models.ItemData {
 	return itemData
 }
 
-func SelectShopClient(username string) *models.ShopClient {
+func SelectShopItem(barcode, shopName string) models.ShopItemData {
 	db := getDB()
-	defer db.Close()
-	stmt, err := db.Prepare("SELECT * FROM shop_client WHERE username=?")
+	stmt, err := db.Prepare("SELECT * FROM shop_item WHERE barcode=? AND shop_name=?")
 	utils.CheckError(err)
-	res, err := stmt.Query(username)
+	res, err := stmt.Query(barcode, shopName)
 	utils.CheckError(err)
-	if res.Next() {
-		var shopClient models.ShopClient
-		res.Scan(&shopClient.Username, &shopClient.ShopId, &shopClient.Password)
-		if res.Next() {
-			return nil
-		}
-		return &shopClient
+	var shopItemData models.ShopItemData
+	shopItemData.Data = make([]models.ShopItem, 0)
+	for res.Next() {
+		var item models.ShopItem
+		res.Scan(&item.Barcode, &item.Shopname, &item.Available)
+		shopItemData.Data = append(shopItemData.Data, item)
 	}
-	return nil
+	return shopItemData
 }

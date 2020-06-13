@@ -7,47 +7,58 @@ import (
 	"../utils"
 )
 
-func InsertShop(shop models.Shop) {
+func InsertShop(shop models.Shop) bool {
 	db := getDB()
 	defer db.Close()
-	stmt, err := db.Prepare("INSERT shop SET shopid=?,name=?,longitude=?,latitude=?")
-	utils.CheckError(err)
-	res, err := stmt.Exec(shop.ShopId, shop.Name, shop.Longitude, shop.Latitude)
-	utils.CheckError(err)
+	stmt, err := db.Prepare("INSERT shop SET name=?,longitude=?,latitude=?,password=?")
+	if utils.CheckError(err) {
+		return false
+	}
+	res, err := stmt.Exec(shop.Name, shop.Longitude, shop.Latitude, shop.Password)
+	if utils.CheckError(err) {
+		return false
+	}
 	affect, err := res.RowsAffected()
-	utils.CheckError(err)
-	fmt.Println(affect)
+	if utils.CheckError(err) {
+		return false
+	}
+	fmt.Print(" Inserted ",affect," rows ")
+	return true
 }
 
-func InsertShopClient(shopClient models.ShopClient) {
-	db := getDB()
-	stmt, err := db.Prepare("INSERT shop_client SET username=?,shopid=?,password=?")
-	utils.CheckError(err)
-	res, err := stmt.Exec(shopClient.Username, shopClient.ShopId, shopClient.Password)
-	utils.CheckError(err)
-	affect, err := res.RowsAffected()
-	utils.CheckError(err)
-	fmt.Println(affect)
-}
-
-func InsertItem(item models.Item) {
+func InsertItem(item models.Item) bool {
 	db := getDB()
 	stmt, err := db.Prepare("INSERT item SET barcode=?,name=?,price=?")
-	utils.CheckError(err)
+	if utils.CheckError(err) {
+		return false
+	}
 	res, err := stmt.Exec(item.Barcode, item.Name, item.Price)
-	utils.CheckError(err)
+	if utils.CheckError(err) {
+		return false
+	}
 	affect, err := res.RowsAffected()
-	utils.CheckError(err)
-	fmt.Println(affect)
+	if utils.CheckError(err) {
+		return false
+	}
+	fmt.Print(" Inserted ",affect," rows ")
+	return true
 }
 
-func InsertShopItem(shopItem models.ShopItem) {
+func InsertShopItem(shopItem models.ShopItem) bool {
 	db := getDB()
-	stmt, err := db.Prepare("INSERT shop_item SET shopid=?,barcode=?,quantity=?")
-	utils.CheckError(err)
-	res, err := stmt.Exec(shopItem.ShopId, shopItem.Barcode, shopItem.Quantity)
-	utils.CheckError(err)
+	stmt, err := db.Prepare("INSERT shop_item SET shop_name=?,barcode=?,available=?")
+	if utils.CheckError(err) {
+		return false
+	}
+	res, err := stmt.Exec(shopItem.Shopname, shopItem.Barcode, shopItem.Available)
+
+	if utils.CheckError(err) {
+		return false
+	}
 	affect, err := res.RowsAffected()
-	utils.CheckError(err)
-	fmt.Println(affect)
+	if utils.CheckError(err) {
+		return false
+	}
+	fmt.Print(" Inserted ",affect," rows ")
+	return true
 }

@@ -11,8 +11,9 @@ func Handlers() *mux.Router {
 	r := mux.NewRouter().StrictSlash(true)
 	r.Use(CommonMiddleware)
 
-	r.HandleFunc("/register", CreateShopClient).Methods("POST")
+	r.HandleFunc("/register", Register).Methods("POST")
 	r.HandleFunc("/login", Login).Methods("POST")
+	r.HandleFunc("/test", Test)
 
 	// Auth route
 	s := r.PathPrefix("/auth").Subrouter()

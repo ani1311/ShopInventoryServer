@@ -8,29 +8,22 @@ CREATE TABLE item (
     price INT NOT NULL
 );
 
-CREATE TABLE shop(
-    shopid INT NOT NULL PRIMARY KEY,
-    name TEXT NOT NULL,
+CREATE TABLE shop( 
+    name VARCHAR(50) NOT NULL PRIMARY KEY,
     longitude TEXT NOT NULL,
-    latitude TEXT NOT NULL
+    latitude TEXT NOT NULL,
+    password TEXT NOT NULL
 );
-
-CREATE TABLE shop_client(
-    username VARCHAR(30) NOT NULL PRIMARY KEY,
-    shopid INT NOT NULL ,
-    password TEXT NOT NULL,
-    CONSTRAINT FK_shopClient_shopid FOREIGN KEY (shopid)
-    REFERENCES shop(shopid)
-);
-
 
 CREATE TABLE shop_item(
-    shopid INT NOT NULL,
+    shop_name VARCHAR(50) NOT NULL,
     barcode VARCHAR(30) NOT NULL,
-    quantity INT NOT NULL,
-    PRIMARY KEY (shopid,barcode),
-    CONSTRAINT FK_shopitem_shopid FOREIGN KEY (shopid)
-    REFERENCES shop(shopid),
+    available BOOLEAN,
+    PRIMARY KEY (shop_name,barcode),
+    CONSTRAINT FK_shop_name FOREIGN KEY (shop_name)
+    REFERENCES shop(name),
     CONSTRAINT FK_barcode FOREIGN KEY (barcode)
     REFERENCES item(barcode)
 );
+
+/* SET FOREIGN_KEY_CHECKS = 0; */

@@ -1,9 +1,9 @@
 package models
 
 type ShopItem struct {
-	ShopId   int    `json:"shopId"`
-	Barcode  string `json:"barcode"`
-	Quantity int    `json:"quantity"`
+	Shopname  string `json:"shopName"`
+	Barcode   string `json:"barcode"`
+	Available bool   `json:"available"`
 }
 
 type ShopItemData struct {
