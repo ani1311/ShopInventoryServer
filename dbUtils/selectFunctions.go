@@ -86,3 +86,19 @@ func SelectShopItem(barcode, shopName string) models.ShopItemData {
 	}
 	return shopItemData
 }
+
+func SelectShopWithItems(barcode string) models.ShopData {
+	db := getDB()
+	stmt, err := db.Prepare("SELECT * FROM shop WHERE name IN (SELECT shop_name FROM shop_item where barcode=?)")
+	utils.CheckError(err)
+	res, err := stmt.Query(barcode)
+	utils.CheckError(err)
+	var shopData models.ShopData
+	shopData.Data = make([]models.Shop, 0)
+	for res.Next() {
+		var shop models.Shop
+		res.Scan(&shop.Name, &shop.Longitude, &shop.Latitude, &shop.Password)
+		shopData.Data = append(shopData.Data, shop)
+	}
+	return shopData
+}

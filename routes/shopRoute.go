@@ -1,33 +1,53 @@
 package routes
 
 import (
+	"encoding/json"
+	"fmt"
 	"net/http"
+
+	"../dbUtils"
+	"../mapUtils"
+	"../models"
+	"../utils"
 )
 
-func ShopEndpoint(w http.ResponseWriter, r *http.Request) {
-	// if r.Method == http.MethodPost {
-	// 	dataBytes, err := ioutil.ReadAll(r.Body)
-	// 	utils.CheckError(err)
-	// 	var data models.ShopData
-	// 	err = json.Unmarshal(dataBytes, &data)
-	// 	utils.CheckError(err)
-	// 	for _, shop := range data.Data {
-	// 		dbUtils.InsertShop(shop)
-	// 	}
-	// 	w.Write([]byte("Success"))
-	// 	w.WriteHeader(200)
-	// } else if r.Method == http.MethodGet {
-	// 	shopId, ok := r.URL.Query()["shopId"]
-	// 	var data models.ShopData
-	// 	if !ok || len(shopId[0]) < 1 {
-	// 		data = dbUtils.SelectAllShop()
-	// 	} else {
-	// 		shopIdInt, err := strconv.ParseInt(shopId[0], 10, 32)
-	// 		utils.CheckError(err)
-	// 		data = dbUtils.SelectShopWithId(int(shopIdInt))
-	// 	}
-	// 	dataBytes, err := json.Marshal(data)
-	// 	utils.CheckError(err)
-	// 	w.Write(dataBytes)
-	// }
+func ShopWithItemEndpoint(w http.ResponseWriter, r *http.Request) {
+	var shopData models.ShopData
+	threshold := float64(4000)
+
+	fmt.Print("Find item in shop ItemEndpoint : ")
+	barcode, ok := r.URL.Query()[utils.BarcodeString]
+	if !ok || len(barcode[0]) < 1 {
+		fmt.Println("No Barcode Found ")
+		json.NewEncoder(w).Encode(utils.InvalidRequestResponse)
+		return
+	}
+	shopData = dbUtils.SelectShopWithItems(barcode[0])
+
+	longitude, ok := r.URL.Query()[utils.LongitudeString]
+	if !ok || len(longitude[0]) < 1 {
+		fmt.Println("No Longitude Found ")
+		json.NewEncoder(w).Encode(utils.InvalidRequestResponse)
+		return
+	}
+
+	latitude, ok := r.URL.Query()[utils.LatitudeString]
+	if !ok || len(latitude[0]) < 1 {
+		fmt.Println("No Latitude Found ")
+		json.NewEncoder(w).Encode(utils.InvalidRequestResponse)
+		return
+	}
+	res := models.ShopData{}
+	res.Data = make([]models.Shop, 0)
+	
+
+	for _, shop := range shopData.Data {
+		if mapUtils.Distance(string(latitude[0]), string(longitude[0]), string(shop.Latitude), string(shop.Longitude)) < threshold {
+			res.Data = append(res.Data, shop)
+		}
+	}
+
+	dataBytes, err := json.Marshal(res)
+	utils.CheckError(err)
+	w.Write(dataBytes)
 }

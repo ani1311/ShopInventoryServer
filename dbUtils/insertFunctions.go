@@ -22,7 +22,7 @@ func InsertShop(shop models.Shop) bool {
 	if utils.CheckError(err) {
 		return false
 	}
-	fmt.Print(" Inserted ",affect," rows ")
+	fmt.Print(" Inserted ", affect, " rows ")
 	return true
 }
 
@@ -30,6 +30,7 @@ func InsertItem(item models.Item) bool {
 	db := getDB()
 	stmt, err := db.Prepare("INSERT item SET barcode=?,name=?,price=?")
 	if utils.CheckError(err) {
+
 		return false
 	}
 	res, err := stmt.Exec(item.Barcode, item.Name, item.Price)
@@ -40,7 +41,7 @@ func InsertItem(item models.Item) bool {
 	if utils.CheckError(err) {
 		return false
 	}
-	fmt.Print(" Inserted ",affect," rows ")
+	fmt.Print(" Inserted ", affect, " rows ")
 	return true
 }
 
@@ -59,6 +60,6 @@ func InsertShopItem(shopItem models.ShopItem) bool {
 	if utils.CheckError(err) {
 		return false
 	}
-	fmt.Print(" Inserted ",affect," rows ")
+	fmt.Print(" Inserted ", affect, " rows ")
 	return true
 }

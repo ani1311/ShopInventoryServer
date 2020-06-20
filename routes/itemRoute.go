@@ -6,11 +6,12 @@ import (
 	"net/http"
 
 	"../dbUtils"
+	"../searchUtils"
 	"../serverState"
 	"../utils"
 )
 
-func ItemEndpoint(w http.ResponseWriter, r *http.Request) {
+func AddShopItemEndpoint(w http.ResponseWriter, r *http.Request) {
 	fmt.Print("Item ItemEndpoint : ")
 	barcode, ok := r.URL.Query()[utils.BarcodeString]
 	if !ok || len(barcode[0]) < 1 {
@@ -54,4 +55,17 @@ func ItemEndpoint(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(utils.InvalidRequestResponse)
 		return
 	}
+}
+
+func GetItemsEndpoint(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Getting items")
+	name, ok := r.URL.Query()["name"]
+	if !ok || len(name[0]) < 1 {
+		fmt.Println("No Name Found ")
+		json.NewEncoder(w).Encode(utils.InvalidRequestResponse)
+		return
+	}
+	items := searchUtils.SearchItem(name[0])
+	resp, _ := json.Marshal(items)
+	w.Write(resp)
 }

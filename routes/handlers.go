@@ -1,34 +1,24 @@
 package routes
 
-import (
-	"net/http"
+//func Handlers() *mux.Router {
 
-	"github.com/gorilla/mux"
-)
+//	r := mux.NewRouter().StrictSlash(true)
+//	r.Use(CommonMiddleware)
 
-func Handlers() *mux.Router {
+//	//website functions
+//	fmt.Println(os.Open("website"))
+//	r.Handle("/", http.FileServer(http.Dir("./website/")))
 
-	r := mux.NewRouter().StrictSlash(true)
-	r.Use(CommonMiddleware)
+//	r.HandleFunc("/register", Register).Methods("POST")
+//	r.HandleFunc("/login", Login).Methods("POST")
+//	r.HandleFunc("/test", Test)
+//	r.HandleFunc("/getItems", GetItemsEndpoint)
+//	r.HandleFunc("/shopWithItem", ShopWithItemEndpoint)
 
-	r.HandleFunc("/register", Register).Methods("POST")
-	r.HandleFunc("/login", Login).Methods("POST")
-	r.HandleFunc("/test", Test)
+//	// Auth route
+//	s := r.PathPrefix("/auth").Subrouter()
+//	s.Use(JwtVerify)
+//	s.HandleFunc("/addShopItem", AddShopItemEndpoint)
 
-	// Auth route
-	s := r.PathPrefix("/auth").Subrouter()
-	s.Use(JwtVerify)
-	s.HandleFunc("/item", ItemEndpoint)
-	s.HandleFunc("/shop", ShopEndpoint)
-	return r
-}
-
-func CommonMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Add("Content-Type", "application/json")
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-		w.Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, Access-Control-Request-Headers, Access-Control-Request-Method, Connection, Host, Origin, User-Agent, Referer, Cache-Control, X-header")
-		next.ServeHTTP(w, r)
-	})
-}
+//	return r
+//}

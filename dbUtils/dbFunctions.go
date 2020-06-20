@@ -2,13 +2,15 @@ package dbUtils
 
 import (
 	"database/sql"
+	"fmt"
 
-	"../utils"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func getDB() *sql.DB {
 	db, err := sql.Open("mysql", "aniket:aniket1311@(localhost:3306)/shop_inventory")
-	utils.CheckError(err)
+	fmt.Println(err)
+	// utils.CheckError(err)
 	return db
 
 }

@@ -14,6 +14,8 @@ const TokenString = "token"
 const SessionIDString = "sessionID"
 const OperationString = "operation"
 const UserString = "shop"
+const LongitudeString = "longitude"
+const LatitudeString = "latitude"
 
 const AddOperationString = "add"
 const RemoveOperationString = "remove"
@@ -29,7 +31,15 @@ func init() {
 func CheckError(err error) bool {
 	if err != nil {
 		fmt.Println(err.Error)
+
 		return true
 	}
 	return false
+}
+
+func Min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
 }
